@@ -157,15 +157,6 @@ cp .env.example .env
 ```
 
 ---
-
-## 📷 Screenshots
-
-### 🖥️ Dashboard - Performance Center
-![Dashboard Insights](https://github.com/user-attachments/assets/c4242649-382a-4cc4-a72e-15ad7d29844b)
-
-### 🛡️ Focus Guard
-![Focus Mode](https://github.com/user-attachments/assets/14528c73-7bd2-4fe7-80bc-c7df02c7d51b)
-
 ---
 
 ⭐ **Star the AERO repository to support open-source productivity!** 🦅
