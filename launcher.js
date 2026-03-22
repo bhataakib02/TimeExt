@@ -2,11 +2,11 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 const services = [
-    { name: 'auth', dir: 'backend-services/auth-service', cmd: 'npm', args: ['start'] },
-    { name: 'track', dir: 'backend-services/tracking-service', cmd: 'npm', args: ['start'] },
-    { name: 'real', dir: 'backend-services/realtime-service', cmd: 'npm', args: ['start'] },
-    { name: 'gate', dir: 'backend-services/api-gateway', cmd: 'npm', args: ['start'] },
-    { name: 'dash', dir: 'dashboard', cmd: 'npm', args: ['run', 'dev'] }
+    { name: 'auth', dir: 'backend/auth-service', cmd: 'npm', args: ['start'] },
+    { name: 'track', dir: 'backend/tracking-service', cmd: 'npm', args: ['start'] },
+    { name: 'real', dir: 'backend/realtime-service', cmd: 'npm', args: ['start'] },
+    { name: 'gate', dir: 'backend/api-gateway', cmd: 'npm', args: ['start'] },
+    { name: 'dash', dir: 'frontend', cmd: 'npm', args: ['run', 'dev'] }
 ];
 
 const colors = {

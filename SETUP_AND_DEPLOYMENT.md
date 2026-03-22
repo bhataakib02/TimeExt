@@ -26,7 +26,7 @@ The system consists of the following components:
 Ensure Docker is running, then orchestrate the backend stack:
 
 ```bash
-cd backend-services
+cd backend
 docker compose up --build
 ```
 
@@ -38,7 +38,7 @@ This will automatically start:
 ### 2. Run the Next.js Dashboard
 In a new terminal:
 ```bash
-cd dashboard
+cd frontend
 npm install
 npm run dev
 ```
@@ -58,7 +58,7 @@ The dashboard will be available at `http://localhost:3000`.
 Deploy **MongoDB Atlas** and **Redis Labs** clusters. Obtain their connection URIs. Update the `.env` files in each microservice folder.
 
 ### Phase 2: Microservices (Railway or AWS ECS)
-The easiest way to orchestrate the backend in production is to deploy the `backend-services` directory. 
+The easiest way to orchestrate the backend in production is to deploy the `backend` directory. 
 1. Push your repository to GitHub.
 2. Link the repository to Railway/Render.
 3. Provide the environment variables (e.g., `MONGO_URI`, `REDIS_URL`, `JWT_SECRET`).
@@ -66,7 +66,7 @@ The easiest way to orchestrate the backend in production is to deploy the `backe
 
 ### Phase 3: Dashboard (Vercel)
 1. Go to Vercel and import the repository.
-2. Select `dashboard` as the Root Directory.
+2. Select `frontend` as the Root Directory.
 3. Add the production URL of your API Gateway as `NEXT_PUBLIC_API_URL` in the environment variables.
 4. Deploy!
 
