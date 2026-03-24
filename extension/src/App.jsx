@@ -38,7 +38,12 @@ function App() {
   }, []);
 
   const handleDashboard = () => {
-    chrome.tabs.create({ url: "http://localhost:3000" });
+    const dashboardUrl = "http://localhost:3000";
+    if (typeof chrome !== "undefined" && chrome.tabs && chrome.tabs.create) {
+      chrome.tabs.create({ url: dashboardUrl });
+      return;
+    }
+    window.open(dashboardUrl, "_blank", "noopener,noreferrer");
   }
 
   const handleClearData = () => {

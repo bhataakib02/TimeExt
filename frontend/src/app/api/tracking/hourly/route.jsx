@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect from '../../../../../../backend/db/mongodb.jsx';
+import dbConnect, { isDbUnavailableError } from '../../../../../../backend/db/mongodb.jsx';
 import Tracking from '../../../../../../backend/models/Tracking.jsx';
 
 const MOCK_USER_ID = "65f1a2b3c4d5e6f7a8b9c0d1";
@@ -44,6 +44,10 @@ export async function GET(req) {
         return NextResponse.json(hourlyData);
     } catch (err) {
         console.error("❌ Hourly Stats API Error:", err);
+        if (isDbUnavailableError(err)) {
+            const hourlyData = Array(24).fill(0).map((_, i) => ({ hour: i, time: 0 }));
+            return NextResponse.json(hourlyData);
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

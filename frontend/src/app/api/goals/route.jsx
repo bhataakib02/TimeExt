@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect from '../../../../../backend/db/mongodb.jsx';
+import dbConnect, { isDbUnavailableError } from '../../../../../backend/db/mongodb.jsx';
 import Goal from '../../../../../backend/models/Goal.jsx';
 
 const MOCK_USER_ID = "65f1a2b3c4d5e6f7a8b9c0d1";
@@ -20,6 +20,11 @@ export async function GET(req) {
         return NextResponse.json(goals);
     } catch (err) {
         console.error("Goals GET Error:", err);
+        if (isDbUnavailableError(err)) {
+            const { searchParams } = new URL(req.url);
+            const id = searchParams.get("id");
+            return NextResponse.json(id ? null : []);
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
@@ -32,6 +37,9 @@ export async function POST(req) {
         return NextResponse.json(goal);
     } catch (err) {
         console.error("Goals POST Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({ success: true, offline: true });
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
@@ -49,6 +57,9 @@ export async function PUT(req) {
         return NextResponse.json(goal);
     } catch (err) {
         console.error("Goals PUT Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({ success: true, offline: true });
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
@@ -65,6 +76,9 @@ export async function DELETE(req) {
         return NextResponse.json({ success: true });
     } catch (err) {
         console.error("Goals DELETE Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({ success: true, offline: true });
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

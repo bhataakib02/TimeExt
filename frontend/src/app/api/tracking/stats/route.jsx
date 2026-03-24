@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect from '../../../../../../backend/db/mongodb.jsx';
+import dbConnect, { isDbUnavailableError } from '../../../../../../backend/db/mongodb.jsx';
 import Tracking from '../../../../../../backend/models/Tracking.jsx';
 
 const MOCK_USER_ID = "65f1a2b3c4d5e6f7a8b9c0d1";
@@ -63,6 +63,9 @@ export async function GET(req) {
     } catch (err) {
         console.error("❌ [STATS] Tracking Stats API Error:", err.message);
         console.error("❌ [STATS] Stack Trace:", err.stack);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({ score: 0, totalTime: 0, productiveTime: 0, unproductiveTime: 0, neutralTime: 0 });
+        }
         return NextResponse.json({
             error: err.message,
             stack: process.env.NODE_ENV === 'development' ? err.stack : undefined

@@ -2,8 +2,10 @@ html,
 body {
   margin: 0;
   padding: 0;
-  width: 100%;
-  min-width: 0;
+  width: 352px;
+  min-width: 352px;
+  max-width: 352px;
+  height: auto;
   overflow: hidden;
   background: #0d0f17;
 }
@@ -11,5 +13,8 @@ body {
 #root {
   margin: 0;
   padding: 0;
-  width: fit-content;
+  width: 352px;
+  min-width: 352px;
+  max-width: 352px;
+  overflow: hidden;
 }

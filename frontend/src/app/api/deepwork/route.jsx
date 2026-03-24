@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect from '../../../../../backend/db/mongodb.jsx';
+import dbConnect, { isDbUnavailableError } from '../../../../../backend/db/mongodb.jsx';
 import DeepWorkSession from '../../../../../backend/models/DeepWorkSession.jsx';
 
 const MOCK_USER_ID = "65f1a2b3c4d5e6f7a8b9c0d1";
@@ -12,6 +12,9 @@ export async function GET() {
         return NextResponse.json(sessions);
     } catch (err) {
         console.error("DeepWork GET Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json([]);
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
@@ -24,6 +27,9 @@ export async function POST(req) {
         return NextResponse.json(session);
     } catch (err) {
         console.error("DeepWork POST Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({ success: true, offline: true });
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

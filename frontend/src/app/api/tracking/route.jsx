@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect from '../../../../../backend/db/mongodb.jsx';
+import dbConnect, { isDbUnavailableError } from '../../../../../backend/db/mongodb.jsx';
 import Tracking from '../../../../../backend/models/Tracking.jsx';
 import Category from '../../../../../backend/models/Category.jsx';
 import aiClassifier from '../../../../../backend/services/aiClassifier.jsx';
 
 // Mock user ID for now since auth is mocked in frontend
 const MOCK_USER_ID = "65f1a2b3c4d5e6f7a8b9c0d1";
-
 export async function POST(req) {
     try {
         await dbConnect();
@@ -58,6 +57,10 @@ export async function POST(req) {
         return NextResponse.json({ success: true, category });
     } catch (err) {
         console.error("Tracking POST Error:", err);
+        if (isDbUnavailableError(err)) {
+            // Keep extension flow usable when MongoDB is temporarily unreachable.
+            return NextResponse.json({ success: true, category: "neutral", offline: true });
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
@@ -93,6 +96,9 @@ export async function GET(req) {
         return NextResponse.json(data);
     } catch (err) {
         console.error("Tracking GET Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json([]);
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
@@ -104,6 +110,9 @@ export async function DELETE(req) {
         return NextResponse.json({ success: true, message: "Cleared all data" });
     } catch (err) {
         console.error("Tracking DELETE Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({ success: true, message: "Cleared all data (offline mode)" });
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }

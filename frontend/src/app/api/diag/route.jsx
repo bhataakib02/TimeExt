@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect from '../../../../../backend/db/mongodb.jsx';
+import dbConnect, { isDbUnavailableError } from '../../../../../backend/db/mongodb.jsx';
 
 export async function GET() {
     try {
@@ -28,6 +28,14 @@ export async function GET() {
 
         return NextResponse.json({ status, counts });
     } catch (err) {
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({
+                status: { connected: false, dbName: null, collections: [] },
+                counts: {},
+                offline: true,
+                reason: err.message
+            });
+        }
         return NextResponse.json({ error: err.message, stack: err.stack }, { status: 500 });
     }
 }

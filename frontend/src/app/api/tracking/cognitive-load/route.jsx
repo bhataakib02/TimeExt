@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import mongoose from 'mongoose';
-import dbConnect from '../../../../../../backend/db/mongodb.jsx';
+import dbConnect, { isDbUnavailableError } from '../../../../../../backend/db/mongodb.jsx';
 import Tracking from '../../../../../../backend/models/Tracking.jsx';
 
 const MOCK_USER_ID = "65f1a2b3c4d5e6f7a8b9c0d1";
@@ -43,6 +43,9 @@ export async function GET(req) {
         return NextResponse.json({ cognitiveLoad: load, level });
     } catch (err) {
         console.error("❌ Cognitive Load API Error:", err);
+        if (isDbUnavailableError(err)) {
+            return NextResponse.json({ cognitiveLoad: 0, level: "low" });
+        }
         return NextResponse.json({ error: err.message }, { status: 500 });
     }
 }
